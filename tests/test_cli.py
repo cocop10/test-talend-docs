@@ -1,9 +1,16 @@
+import base64
 import shutil
 from pathlib import Path
 
 from talend_doc_gen.cli import generate_docs
 
 FIXTURES = Path(__file__).parent / "fixtures"
+
+# Le plus petit PNG valide possible (1x1 pixel transparent), pour que le
+# rendu .docx (qui inspecte réellement le contenu de l'image) l'accepte.
+_TINY_PNG = base64.b64decode(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+)
 
 
 def test_generate_docs_end_to_end(tmp_path: Path):
@@ -37,9 +44,7 @@ connections:
 """,
         encoding="utf-8",
     )
-    # Capture d'écran factice pour le job manuel (le contenu n'a pas besoin
-    # d'être une vraie image pour vérifier le mécanisme de copie).
-    (screenshots_dir / "CRM_Export_Prospects.png").write_bytes(b"fake-png-bytes")
+    (screenshots_dir / "CRM_Export_Prospects.png").write_bytes(_TINY_PNG)
 
     names = generate_docs(items_dir, manual_dir, screenshots_dir, out_dir)
 
@@ -50,6 +55,8 @@ connections:
     assert (out_dir / "jobs" / "dwh-load-clients.md").exists()
     assert (out_dir / "jobs" / "crm-export-prospects.html").exists()
     assert (out_dir / "assets" / "screenshots" / "crm-export-prospects.png").exists()
+    assert (out_dir / "word" / "dwh-load-clients.docx").exists()
+    assert (out_dir / "word" / "crm-export-prospects.docx").exists()
 
     dwh_md = (out_dir / "jobs" / "dwh-load-clients.md").read_text(encoding="utf-8")
     assert "Aucune capture d'écran associée" in dwh_md

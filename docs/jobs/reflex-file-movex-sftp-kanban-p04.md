@@ -74,6 +74,16 @@ flowchart LR
     tDBConnection_1 ==>|OnSubjobOk| tDBCommit_1
     tFixedFlowInput_1 -->|monitor_fichier| file_monitor_1
     file_monitor_1 -->|out| tJavaRow_1
+    classDef orchestration fill:#EDE9FE,stroke:#7C3AED,stroke-width:1px,color:#1e293b;
+    class tPrejob_1,repertoires_traitement_2,tSetGlobalVar_1,tFTPConnection_1,tFTPClose_1,tRunJob_1,tRunJob_2,tRunJob_4,tRunJob_5,tDBConnection_1,tDBCommit_1,file_monitor_1 orchestration;
+    classDef transform fill:#FEF3C7,stroke:#D97706,stroke-width:1px,color:#1e293b;
+    class tJava_3,tJava_4,tFilterColumns_1,tMap_3,tJava_2,tJavaRow_1 transform;
+    classDef target fill:#DCFCE7,stroke:#16A34A,stroke-width:1px,color:#1e293b;
+    class tFTPPut_1,tFileDelete_2,tFileOutputDelimited_1 target;
+    classDef source fill:#DBEAFE,stroke:#2563EB,stroke-width:1px,color:#1e293b;
+    class tFileList_2,tFileList_1,tFileInputJSON_2,tFixedFlowInput_1 source;
+    classDef other fill:#F1F5F9,stroke:#64748B,stroke-width:1px,color:#1e293b;
+    class tLogRow_1 other;
 ```
 
 </details>

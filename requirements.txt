@@ -1,2 +1,8 @@
 PyYAML>=6.0
 pytest>=7.0
+python-docx>=1.1
+
+# Optionnel : rendu du diagramme Mermaid en image pour les jobs sans capture
+# d'écran dans les fichiers Word (.docx). Sans ces paquets, les .docx sont
+# quand même générés, avec un simple message à la place du diagramme.
+# playwright>=1.40

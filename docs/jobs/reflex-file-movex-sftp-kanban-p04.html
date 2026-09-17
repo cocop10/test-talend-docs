@@ -69,7 +69,17 @@
     tDBConnection_1 ==&gt;|OnComponentOk| tFixedFlowInput_1
     tDBConnection_1 ==&gt;|OnSubjobOk| tDBCommit_1
     tFixedFlowInput_1 --&gt;|monitor_fichier| file_monitor_1
-    file_monitor_1 --&gt;|out| tJavaRow_1</pre>
+    file_monitor_1 --&gt;|out| tJavaRow_1
+    classDef orchestration fill:#EDE9FE,stroke:#7C3AED,stroke-width:1px,color:#1e293b;
+    class tPrejob_1,repertoires_traitement_2,tSetGlobalVar_1,tFTPConnection_1,tFTPClose_1,tRunJob_1,tRunJob_2,tRunJob_4,tRunJob_5,tDBConnection_1,tDBCommit_1,file_monitor_1 orchestration;
+    classDef transform fill:#FEF3C7,stroke:#D97706,stroke-width:1px,color:#1e293b;
+    class tJava_3,tJava_4,tFilterColumns_1,tMap_3,tJava_2,tJavaRow_1 transform;
+    classDef target fill:#DCFCE7,stroke:#16A34A,stroke-width:1px,color:#1e293b;
+    class tFTPPut_1,tFileDelete_2,tFileOutputDelimited_1 target;
+    classDef source fill:#DBEAFE,stroke:#2563EB,stroke-width:1px,color:#1e293b;
+    class tFileList_2,tFileList_1,tFileInputJSON_2,tFixedFlowInput_1 source;
+    classDef other fill:#F1F5F9,stroke:#64748B,stroke-width:1px,color:#1e293b;
+    class tLogRow_1 other;</pre>
 </details>
 <h2>Composants</h2>
 <table class="tbl"><thead><tr><th>Nom</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>tPrejob_1</td><td>tPrejob</td><td>Non renseigné</td></tr><tr><td>repertoires_traitement_2</td><td>ref_global:repertoires_traitement</td><td>Non renseigné</td></tr><tr><td>tSetGlobalVar_1</td><td>tSetGlobalVar</td><td>Non renseigné</td></tr><tr><td>tFTPConnection_1</td><td>tFTPConnection</td><td>Non renseigné</td></tr><tr><td>tJava_3</td><td>tJava</td><td>Non renseigné</td></tr><tr><td>tFTPClose_1</td><td>tFTPClose</td><td>Non renseigné</td></tr><tr><td>tFTPPut_1</td><td>tFTPPut</td><td>Non renseigné</td></tr><tr><td>tJava_4</td><td>tJava</td><td>Non renseigné</td></tr><tr><td>tFileList_2</td><td>tFileList</td><td>Non renseigné</td></tr><tr><td>tRunJob_1</td><td>tRunJob</td><td>Non renseigné</td></tr><tr><td>tRunJob_2</td><td>tRunJob</td><td>Non renseigné</td></tr><tr><td>tFileList_1</td><td>tFileList</td><td>Non renseigné</td></tr><tr><td>tFileInputJSON_2</td><td>tFileInputJSON</td><td>Non renseigné</td></tr><tr><td>tLogRow_1</td><td>tLogRow</td><td>Non renseigné</td></tr><tr><td>tFileDelete_2</td><td>tFileDelete</td><td>Non renseigné</td></tr><tr><td>tRunJob_4</td><td>tRunJob</td><td>Non renseigné</td></tr><tr><td>tRunJob_5</td><td>tRunJob</td><td>Non renseigné</td></tr><tr><td>tFilterColumns_1</td><td>tFilterColumns</td><td>Non renseigné</td></tr><tr><td>tMap_3</td><td>tMap</td><td>Non renseigné</td></tr><tr><td>tFileOutputDelimited_1</td><td>tFileOutputDelimited</td><td>Non renseigné</td></tr><tr><td>tJava_2</td><td>tJava</td><td>Non renseigné</td></tr><tr><td>tDBConnection_1</td><td>tMysqlConnection</td><td>Non renseigné</td></tr><tr><td>tDBCommit_1</td><td>tMysqlCommit</td><td>Non renseigné</td></tr><tr><td>tFixedFlowInput_1</td><td>tFixedFlowInput</td><td>Non renseigné</td></tr><tr><td>file_monitor_1</td><td>ref_global:file_monitor</td><td>Non renseigné</td></tr><tr><td>tJavaRow_1</td><td>tJavaRow</td><td>Non renseigné</td></tr></tbody></table>

@@ -28,7 +28,15 @@
     tLogRow_1["tLogRow_1&lt;br/&gt;&lt;i&gt;tLogRow&lt;/i&gt;"]
     tFileInputDelimited_1 --&gt;|row1| tMap_1
     tMap_1 --&gt;|row2| tDBOutput_1
-    tMap_1 -.-&gt;|rejet| tLogRow_1</pre>
+    tMap_1 -.-&gt;|rejet| tLogRow_1
+    classDef source fill:#DBEAFE,stroke:#2563EB,stroke-width:1px,color:#1e293b;
+    class tFileInputDelimited_1 source;
+    classDef transform fill:#FEF3C7,stroke:#D97706,stroke-width:1px,color:#1e293b;
+    class tMap_1 transform;
+    classDef target fill:#DCFCE7,stroke:#16A34A,stroke-width:1px,color:#1e293b;
+    class tDBOutput_1 target;
+    classDef other fill:#F1F5F9,stroke:#64748B,stroke-width:1px,color:#1e293b;
+    class tLogRow_1 other;</pre>
 <h2>Composants</h2>
 <table class="tbl"><thead><tr><th>Nom</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>tFileInputDelimited_1</td><td>tFileInputDelimited</td><td>Lit le fichier CSV des clients exporté par le CRM</td></tr><tr><td>tMap_1</td><td>tMap</td><td>Nettoyage et mapping des colonnes clients</td></tr><tr><td>tDBOutput_1</td><td>tDBOutput</td><td>Insertion dans la table clients de l'entrepôt de données</td></tr><tr><td>tLogRow_1</td><td>tLogRow</td><td>Non renseigné</td></tr></tbody></table>
 <h2>Connexions</h2>

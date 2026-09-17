@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 
+from .component_style import CATEGORY_STYLE, component_category
 from .models import Job
 
 _KIND_ARROW = {
@@ -28,6 +29,7 @@ def _safe_id(name: str) -> str:
 
 def build_mermaid(job: Job, direction: str = "LR") -> str:
     lines = [f"flowchart {direction}"]
+    categories_used: dict[str, list[str]] = {}
 
     for component in job.components:
         node_id = _safe_id(component.name)
@@ -35,6 +37,8 @@ def build_mermaid(job: Job, direction: str = "LR") -> str:
         if component.type and component.type != component.name:
             label = f"{component.name}<br/><i>{component.type}</i>"
         lines.append(f'    {node_id}["{label}"]')
+        category = component_category(component.type)
+        categories_used.setdefault(category, []).append(node_id)
 
     for conn in job.connections:
         arrow = _KIND_ARROW.get(conn.kind, "-->")
@@ -45,5 +49,16 @@ def build_mermaid(job: Job, direction: str = "LR") -> str:
 
     if len(lines) == 1:
         lines.append('    empty["Aucun composant détecté"]')
+
+    # Coloration des nœuds par catégorie (source/cible/transformation/
+    # orchestration), pour repérer d'un coup d'œil le rôle de chaque
+    # composant sans avoir à lire chaque étiquette.
+    for category, node_ids in categories_used.items():
+        style = CATEGORY_STYLE[category]
+        lines.append(
+            f"    classDef {category} fill:{style['fill']},stroke:{style['stroke']},"
+            "stroke-width:1px,color:#1e293b;"
+        )
+        lines.append(f"    class {','.join(node_ids)} {category};")
 
     return "\n".join(lines)

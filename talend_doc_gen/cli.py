@@ -26,10 +26,65 @@ from .render_html import STYLE_CSS, render_index_html, render_job_html
 from .render_markdown import render_index_markdown, render_job_markdown
 from .screenshots import find_screenshot
 
+try:
+    from .render_docx import render_job_docx
+
+    _DOCX_AVAILABLE = True
+except ImportError:
+    _DOCX_AVAILABLE = False
+
 
 def slugify(name: str) -> str:
     slug = re.sub(r"[^A-Za-z0-9]+", "-", name).strip("-").lower()
     return slug or "job"
+
+
+def _resolve_screenshot(
+    job: Job,
+    slug: str,
+    manual_dir: Path | None,
+    screenshots_dir: Path | None,
+    screenshots_out_dir: Path,
+) -> Path | None:
+    """Résout puis copie/écrit la capture d'écran finale du job dans
+    ``screenshots_out_dir``, et retourne son chemin absolu (ou ``None``).
+
+    Ordre de priorité :
+      1. override manuel explicite (champ `screenshot` du YAML) ;
+      2. capture intégrée par Talend Studio dans l'export du job (fichier
+         .screenshot) : toujours à jour et fidèle au canevas réel ;
+      3. capture déposée à la main dans screenshots/, nommée d'après le job
+         (utile quand il n'y a pas d'export .item).
+    """
+    screenshot_src = None
+    if job.screenshot:
+        candidate = Path(job.screenshot)
+        if candidate.is_absolute():
+            if candidate.exists():
+                screenshot_src = candidate
+        else:
+            for root in (Path("."), manual_dir, screenshots_dir):
+                if root is None:
+                    continue
+                resolved = root / candidate
+                if resolved.exists():
+                    screenshot_src = resolved
+                    break
+
+    if screenshot_src is None and job.embedded_screenshot:
+        dest_path = screenshots_out_dir / f"{slug}{guess_image_extension(job.embedded_screenshot)}"
+        dest_path.write_bytes(job.embedded_screenshot)
+        return dest_path
+
+    if screenshot_src is None and screenshots_dir:
+        screenshot_src = find_screenshot(job.name, screenshots_dir)
+
+    if screenshot_src is None:
+        return None
+
+    dest_path = screenshots_out_dir / f"{slug}{screenshot_src.suffix.lower()}"
+    shutil.copyfile(screenshot_src, dest_path)
+    return dest_path
 
 
 def collect_jobs(items_dir: Path | None, manual_dir: Path | None) -> dict[str, Job]:
@@ -74,52 +129,22 @@ def generate_docs(
     jobs_dir = out_dir / "jobs"
     assets_dir = out_dir / "assets"
     screenshots_out_dir = assets_dir / "screenshots"
-    for d in (out_dir, jobs_dir, assets_dir, screenshots_out_dir):
+    word_dir = out_dir / "word"
+    dirs = [out_dir, jobs_dir, assets_dir, screenshots_out_dir]
+    if _DOCX_AVAILABLE:
+        dirs.append(word_dir)
+    for d in dirs:
         d.mkdir(parents=True, exist_ok=True)
 
     (assets_dir / "style.css").write_text(STYLE_CSS, encoding="utf-8")
 
+    docx_warned = False
     entries: list[tuple[str, Job]] = []
     for job in jobs.values():
         slug = slugify(job.name)
 
-        # Ordre de priorité pour la capture d'écran d'un job :
-        #   1. override manuel explicite (champ `screenshot` du YAML) ;
-        #   2. capture intégrée par Talend Studio dans l'export du job
-        #      (fichier .screenshot) : toujours à jour et fidèle au canevas
-        #      réel, sans rien à faire manuellement ;
-        #   3. capture déposée à la main dans screenshots/, nommée d'après
-        #      le job (utile quand il n'y a pas d'export .item).
-        screenshot_src = None
-        if job.screenshot:
-            candidate = Path(job.screenshot)
-            if candidate.is_absolute():
-                if candidate.exists():
-                    screenshot_src = candidate
-            else:
-                for root in (Path("."), manual_dir, screenshots_dir):
-                    if root is None:
-                        continue
-                    resolved = root / candidate
-                    if resolved.exists():
-                        screenshot_src = resolved
-                        break
-
-        screenshot_rel = None
-        if screenshot_src is not None:
-            dest_name = f"{slug}{screenshot_src.suffix.lower()}"
-            shutil.copyfile(screenshot_src, screenshots_out_dir / dest_name)
-            screenshot_rel = f"../assets/screenshots/{dest_name}"
-        elif job.embedded_screenshot:
-            dest_name = f"{slug}{guess_image_extension(job.embedded_screenshot)}"
-            (screenshots_out_dir / dest_name).write_bytes(job.embedded_screenshot)
-            screenshot_rel = f"../assets/screenshots/{dest_name}"
-        elif screenshots_dir:
-            screenshot_src = find_screenshot(job.name, screenshots_dir)
-            if screenshot_src is not None:
-                dest_name = f"{slug}{screenshot_src.suffix.lower()}"
-                shutil.copyfile(screenshot_src, screenshots_out_dir / dest_name)
-                screenshot_rel = f"../assets/screenshots/{dest_name}"
+        screenshot_abs = _resolve_screenshot(job, slug, manual_dir, screenshots_dir, screenshots_out_dir)
+        screenshot_rel = f"../assets/screenshots/{screenshot_abs.name}" if screenshot_abs else None
 
         (jobs_dir / f"{slug}.md").write_text(
             render_job_markdown(job, screenshot_rel, mask_context_values=mask_context_values),
@@ -129,6 +154,18 @@ def generate_docs(
             render_job_html(job, screenshot_rel, mask_context_values=mask_context_values),
             encoding="utf-8",
         )
+
+        if _DOCX_AVAILABLE:
+            render_job_docx(
+                job, screenshot_abs, word_dir / f"{slug}.docx", mask_context_values=mask_context_values
+            )
+        elif not docx_warned:
+            print(
+                "Avertissement : le paquet 'python-docx' n'est pas installé, "
+                "aucun fichier Word n'a été généré (pip install python-docx)."
+            )
+            docx_warned = True
+
         entries.append((slug, job))
 
     (out_dir / "index.md").write_text(render_index_markdown(entries), encoding="utf-8")

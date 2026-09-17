@@ -34,6 +34,14 @@ flowchart LR
     tFileInputDelimited_1 -->|row1| tMap_1
     tMap_1 -->|row2| tDBOutput_1
     tMap_1 -.->|rejet| tLogRow_1
+    classDef source fill:#DBEAFE,stroke:#2563EB,stroke-width:1px,color:#1e293b;
+    class tFileInputDelimited_1 source;
+    classDef transform fill:#FEF3C7,stroke:#D97706,stroke-width:1px,color:#1e293b;
+    class tMap_1 transform;
+    classDef target fill:#DCFCE7,stroke:#16A34A,stroke-width:1px,color:#1e293b;
+    class tDBOutput_1 target;
+    classDef other fill:#F1F5F9,stroke:#64748B,stroke-width:1px,color:#1e293b;
+    class tLogRow_1 other;
 ```
 
 ## Composants

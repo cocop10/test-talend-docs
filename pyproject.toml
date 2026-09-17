@@ -5,7 +5,11 @@ description = "Génération automatique de documentation pour les flux Talend (s
 requires-python = ">=3.10"
 dependencies = [
     "PyYAML>=6.0",
+    "python-docx>=1.1",
 ]
+
+[project.optional-dependencies]
+diagram-image = ["playwright>=1.40"]
 
 [project.scripts]
 talend-doc-gen = "talend_doc_gen.cli:main"
@@ -16,6 +20,9 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["talend_doc_gen"]
+
+[tool.setuptools.package-data]
+talend_doc_gen = ["assets/*.js"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

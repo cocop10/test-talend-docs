@@ -26,7 +26,13 @@
     tMap_1["tMap_1&lt;br/&gt;&lt;i&gt;tMap&lt;/i&gt;"]
     tFileOutputDelimited_1["tFileOutputDelimited_1&lt;br/&gt;&lt;i&gt;tFileOutputDelimited&lt;/i&gt;"]
     tSalesforceInput_1 --&gt;|Main| tMap_1
-    tMap_1 --&gt;|Main| tFileOutputDelimited_1</pre>
+    tMap_1 --&gt;|Main| tFileOutputDelimited_1
+    classDef source fill:#DBEAFE,stroke:#2563EB,stroke-width:1px,color:#1e293b;
+    class tSalesforceInput_1 source;
+    classDef transform fill:#FEF3C7,stroke:#D97706,stroke-width:1px,color:#1e293b;
+    class tMap_1 transform;
+    classDef target fill:#DCFCE7,stroke:#16A34A,stroke-width:1px,color:#1e293b;
+    class tFileOutputDelimited_1 target;</pre>
 </details>
 <h2>Composants</h2>
 <table class="tbl"><thead><tr><th>Nom</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>tSalesforceInput_1</td><td>tSalesforceInput</td><td>Extraction des comptes prospects qualifiés (statut = "Qualifié")</td></tr><tr><td>tMap_1</td><td>tMap</td><td>Normalisation des colonnes (email, prénom, nom, segment)</td></tr><tr><td>tFileOutputDelimited_1</td><td>tFileOutputDelimited</td><td>Génération du fichier CSV de campagne</td></tr></tbody></table>

@@ -32,6 +32,12 @@ flowchart LR
     tFileOutputDelimited_1["tFileOutputDelimited_1<br/><i>tFileOutputDelimited</i>"]
     tSalesforceInput_1 -->|Main| tMap_1
     tMap_1 -->|Main| tFileOutputDelimited_1
+    classDef source fill:#DBEAFE,stroke:#2563EB,stroke-width:1px,color:#1e293b;
+    class tSalesforceInput_1 source;
+    classDef transform fill:#FEF3C7,stroke:#D97706,stroke-width:1px,color:#1e293b;
+    class tMap_1 transform;
+    classDef target fill:#DCFCE7,stroke:#16A34A,stroke-width:1px,color:#1e293b;
+    class tFileOutputDelimited_1 target;
 ```
 
 </details>
