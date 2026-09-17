@@ -20,6 +20,7 @@ from pathlib import Path
 from .loader_manual import load_manual_job, merge_jobs
 from .models import Job
 from .parser_item import load_job_from_item
+from .parser_screenshot import guess_image_extension
 from .parser_zip import extract_item_files
 from .render_html import STYLE_CSS, render_index_html, render_job_html
 from .render_markdown import render_index_markdown, render_job_markdown
@@ -66,6 +67,7 @@ def generate_docs(
     manual_dir: Path | None,
     screenshots_dir: Path | None,
     out_dir: Path,
+    mask_context_values: bool = True,
 ) -> list[str]:
     jobs = collect_jobs(items_dir, manual_dir)
 
@@ -81,6 +83,13 @@ def generate_docs(
     for job in jobs.values():
         slug = slugify(job.name)
 
+        # Ordre de priorité pour la capture d'écran d'un job :
+        #   1. override manuel explicite (champ `screenshot` du YAML) ;
+        #   2. capture intégrée par Talend Studio dans l'export du job
+        #      (fichier .screenshot) : toujours à jour et fidèle au canevas
+        #      réel, sans rien à faire manuellement ;
+        #   3. capture déposée à la main dans screenshots/, nommée d'après
+        #      le job (utile quand il n'y a pas d'export .item).
         screenshot_src = None
         if job.screenshot:
             candidate = Path(job.screenshot)
@@ -95,20 +104,30 @@ def generate_docs(
                     if resolved.exists():
                         screenshot_src = resolved
                         break
-        if screenshot_src is None and screenshots_dir:
-            screenshot_src = find_screenshot(job.name, screenshots_dir)
 
         screenshot_rel = None
         if screenshot_src is not None:
             dest_name = f"{slug}{screenshot_src.suffix.lower()}"
             shutil.copyfile(screenshot_src, screenshots_out_dir / dest_name)
             screenshot_rel = f"../assets/screenshots/{dest_name}"
+        elif job.embedded_screenshot:
+            dest_name = f"{slug}{guess_image_extension(job.embedded_screenshot)}"
+            (screenshots_out_dir / dest_name).write_bytes(job.embedded_screenshot)
+            screenshot_rel = f"../assets/screenshots/{dest_name}"
+        elif screenshots_dir:
+            screenshot_src = find_screenshot(job.name, screenshots_dir)
+            if screenshot_src is not None:
+                dest_name = f"{slug}{screenshot_src.suffix.lower()}"
+                shutil.copyfile(screenshot_src, screenshots_out_dir / dest_name)
+                screenshot_rel = f"../assets/screenshots/{dest_name}"
 
         (jobs_dir / f"{slug}.md").write_text(
-            render_job_markdown(job, screenshot_rel), encoding="utf-8"
+            render_job_markdown(job, screenshot_rel, mask_context_values=mask_context_values),
+            encoding="utf-8",
         )
         (jobs_dir / f"{slug}.html").write_text(
-            render_job_html(job, screenshot_rel), encoding="utf-8"
+            render_job_html(job, screenshot_rel, mask_context_values=mask_context_values),
+            encoding="utf-8",
         )
         entries.append((slug, job))
 
@@ -127,11 +146,27 @@ def main(argv: list[str] | None = None) -> int:
     gen.add_argument("--manual-dir", type=Path, default=Path("jobs"))
     gen.add_argument("--screenshots-dir", type=Path, default=Path("screenshots"))
     gen.add_argument("--out-dir", type=Path, default=Path("docs"))
+    gen.add_argument(
+        "--show-context-values",
+        action="store_true",
+        help=(
+            "Affiche les valeurs des paramètres de contexte (hôtes, identifiants, "
+            "chemins...) en clair. Par défaut elles sont masquées car souvent "
+            "sensibles (mots de passe chiffrés, noms de serveurs internes...). "
+            "À utiliser uniquement dans un dépôt privé/de confiance."
+        ),
+    )
 
     args = parser.parse_args(argv)
 
     if args.command == "generate":
-        names = generate_docs(args.items_dir, args.manual_dir, args.screenshots_dir, args.out_dir)
+        names = generate_docs(
+            args.items_dir,
+            args.manual_dir,
+            args.screenshots_dir,
+            args.out_dir,
+            mask_context_values=not args.show_context_values,
+        )
         print(f"{len(names)} job(s) documenté(s) dans {args.out_dir}/ :")
         for name in sorted(names):
             print(f"  - {name}")

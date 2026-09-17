@@ -40,6 +40,7 @@ class Job:
     connections: list[Connection] = field(default_factory=list)
     notes: str = ""
     screenshot: str | None = None  # chemin relatif vers la capture d'écran
+    embedded_screenshot: bytes | None = None  # capture extraite du .screenshot Talend
     source_kind: str = "manual"  # "item" | "manual" | "item+manual"
 
     def component_by_name(self, name: str) -> Component | None:

@@ -50,7 +50,15 @@ def _bullet_list(items: list[str]) -> str:
     return "<ul>" + "".join(f"<li>{_e(i)}</li>" for i in items) + "</ul>"
 
 
-def render_job_html(job: Job, screenshot_rel_path: str | None, css_path: str = "../assets/style.css") -> str:
+_MASKED_VALUE = "•••• (masqué)"
+
+
+def render_job_html(
+    job: Job,
+    screenshot_rel_path: str | None,
+    css_path: str = "../assets/style.css",
+    mask_context_values: bool = True,
+) -> str:
     parts: list[str] = [f'<p><a href="../index.html">&larr; Retour à l\'index</a></p>']
     parts.append(f"<h1>{_e(job.name)}</h1>")
 
@@ -117,7 +125,21 @@ def render_job_html(job: Job, screenshot_rel_path: str | None, css_path: str = "
 
     if job.context_params:
         parts.append("<h2>Paramètres de contexte</h2>")
-        parts.append(_table(["Nom", "Valeur"], [[k, v] for k, v in job.context_params.items()]))
+        if mask_context_values:
+            parts.append(
+                '<p class="muted">Les valeurs (hôtes, identifiants, chemins...) sont '
+                "masquées par défaut car potentiellement sensibles ; seuls les noms de "
+                "paramètres sont listés.</p>"
+            )
+        parts.append(
+            _table(
+                ["Nom", "Valeur"],
+                [
+                    [k, _MASKED_VALUE if mask_context_values else v]
+                    for k, v in job.context_params.items()
+                ],
+            )
+        )
 
     if job.notes:
         parts.append("<h2>Notes</h2>")

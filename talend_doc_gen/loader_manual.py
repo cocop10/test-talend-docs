@@ -98,6 +98,7 @@ def merge_jobs(base: Job, override: Job) -> Job:
         connections=override.connections or base.connections,
         notes=override.notes or base.notes,
         screenshot=override.screenshot or base.screenshot,
+        embedded_screenshot=override.embedded_screenshot or base.embedded_screenshot,
         source_kind="item+manual",
     )
     return merged

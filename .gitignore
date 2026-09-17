@@ -3,3 +3,12 @@ __pycache__/
 .venv/
 *.egg-info/
 .pytest_cache/
+
+# Exports Talend bruts (.item/.properties/.screenshot) : peuvent contenir
+# des secrets (mots de passe chiffrés, hôtes/identifiants internes) dans
+# leurs paramètres de contexte. On les garde locaux par défaut et on ne
+# committe que la documentation générée (dont les valeurs sensibles sont
+# masquées). Seul l'exemple synthétique ci-dessous est suivi explicitement.
+items/*
+!items/DWH_Load_Clients_0.1.item
+!items/DWH_Load_Clients_0.1.properties

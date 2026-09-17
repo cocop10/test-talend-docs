@@ -17,7 +17,12 @@ def _bullet_list(items: list[str]) -> str:
     return "\n".join(f"- {item}" for item in items) if items else "_Non renseigné_"
 
 
-def render_job_markdown(job: Job, screenshot_rel_path: str | None) -> str:
+_MASKED_VALUE = "•••• (masqué)"
+
+
+def render_job_markdown(
+    job: Job, screenshot_rel_path: str | None, mask_context_values: bool = True
+) -> str:
     lines: list[str] = [f"# {job.name}", ""]
 
     if job.description:
@@ -81,8 +86,19 @@ def render_job_markdown(job: Job, screenshot_rel_path: str | None) -> str:
         lines.append("")
 
     if job.context_params:
-        lines += ["## Paramètres de contexte", "", "| Nom | Valeur |", "|---|---|"]
-        lines += [f"| {k} | {v} |" for k, v in job.context_params.items()]
+        lines += ["## Paramètres de contexte", ""]
+        if mask_context_values:
+            lines.append(
+                "_Les valeurs (hôtes, identifiants, chemins...) sont masquées "
+                "par défaut car potentiellement sensibles ; seuls les noms de "
+                "paramètres sont listés._"
+            )
+            lines.append("")
+        lines += ["| Nom | Valeur |", "|---|---|"]
+        lines += [
+            f"| {k} | {_MASKED_VALUE if mask_context_values else v} |"
+            for k, v in job.context_params.items()
+        ]
         lines.append("")
 
     if job.notes:

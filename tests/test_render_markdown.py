@@ -49,6 +49,18 @@ def test_render_index_markdown_lists_jobs():
     assert "Equipe Data" in md
 
 
+def test_render_job_markdown_masks_context_values_by_default():
+    job = make_job()
+    job.context_params = {"connection_sftp_password": "enc:system.encryption.key.v1:abc"}
+
+    masked = render_job_markdown(job, None)
+    assert "enc:system.encryption.key.v1:abc" not in masked
+    assert "masqué" in masked
+
+    clear = render_job_markdown(job, None, mask_context_values=False)
+    assert "enc:system.encryption.key.v1:abc" in clear
+
+
 def test_render_job_html_contains_table_and_diagram():
     job = make_job()
     htm = render_job_html(job, "../assets/screenshots/demo_job.png")

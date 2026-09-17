@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>reflex_file_movex_sftp_kanban_p04</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });</script>
+</head>
+<body>
+<div class="page">
+<p><a href="../index.html">&larr; Retour à l'index</a></p>
+<h1>reflex_file_movex_sftp_kanban_p04</h1>
+<table class="tbl"><thead><tr><th>Champ</th><th>Valeur</th></tr></thead><tbody><tr><td>Propriétaire</td><td>Non renseigné</td></tr><tr><td>Version</td><td>0.1</td></tr><tr><td>Planification</td><td>Non renseigné</td></tr><tr><td>Source du parsing</td><td>item</td></tr></tbody></table>
+<h2>Systèmes source</h2>
+<p class="muted">Non renseigné</p>
+<h2>Systèmes cible</h2>
+<p class="muted">Non renseigné</p>
+<h2>Schéma du flux</h2>
+<img class="screenshot" src="../assets/screenshots/reflex-file-movex-sftp-kanban-p04.png" alt="Capture d'écran du flux reflex_file_movex_sftp_kanban_p04">
+<details><summary>Diagramme généré automatiquement</summary>
+<pre class="mermaid">flowchart LR
+    tPrejob_1["tPrejob_1&lt;br/&gt;&lt;i&gt;tPrejob&lt;/i&gt;"]
+    repertoires_traitement_2["repertoires_traitement_2&lt;br/&gt;&lt;i&gt;ref_global:repertoires_traitement&lt;/i&gt;"]
+    tSetGlobalVar_1["tSetGlobalVar_1&lt;br/&gt;&lt;i&gt;tSetGlobalVar&lt;/i&gt;"]
+    tFTPConnection_1["tFTPConnection_1&lt;br/&gt;&lt;i&gt;tFTPConnection&lt;/i&gt;"]
+    tJava_3["tJava_3&lt;br/&gt;&lt;i&gt;tJava&lt;/i&gt;"]
+    tFTPClose_1["tFTPClose_1&lt;br/&gt;&lt;i&gt;tFTPClose&lt;/i&gt;"]
+    tFTPPut_1["tFTPPut_1&lt;br/&gt;&lt;i&gt;tFTPPut&lt;/i&gt;"]
+    tJava_4["tJava_4&lt;br/&gt;&lt;i&gt;tJava&lt;/i&gt;"]
+    tFileList_2["tFileList_2&lt;br/&gt;&lt;i&gt;tFileList&lt;/i&gt;"]
+    tRunJob_1["tRunJob_1&lt;br/&gt;&lt;i&gt;tRunJob&lt;/i&gt;"]
+    tRunJob_2["tRunJob_2&lt;br/&gt;&lt;i&gt;tRunJob&lt;/i&gt;"]
+    tFileList_1["tFileList_1&lt;br/&gt;&lt;i&gt;tFileList&lt;/i&gt;"]
+    tFileInputJSON_2["tFileInputJSON_2&lt;br/&gt;&lt;i&gt;tFileInputJSON&lt;/i&gt;"]
+    tLogRow_1["tLogRow_1&lt;br/&gt;&lt;i&gt;tLogRow&lt;/i&gt;"]
+    tFileDelete_2["tFileDelete_2&lt;br/&gt;&lt;i&gt;tFileDelete&lt;/i&gt;"]
+    tRunJob_4["tRunJob_4&lt;br/&gt;&lt;i&gt;tRunJob&lt;/i&gt;"]
+    tRunJob_5["tRunJob_5&lt;br/&gt;&lt;i&gt;tRunJob&lt;/i&gt;"]
+    tFilterColumns_1["tFilterColumns_1&lt;br/&gt;&lt;i&gt;tFilterColumns&lt;/i&gt;"]
+    tMap_3["tMap_3&lt;br/&gt;&lt;i&gt;tMap&lt;/i&gt;"]
+    tFileOutputDelimited_1["tFileOutputDelimited_1&lt;br/&gt;&lt;i&gt;tFileOutputDelimited&lt;/i&gt;"]
+    tJava_2["tJava_2&lt;br/&gt;&lt;i&gt;tJava&lt;/i&gt;"]
+    tDBConnection_1["tDBConnection_1&lt;br/&gt;&lt;i&gt;tMysqlConnection&lt;/i&gt;"]
+    tDBCommit_1["tDBCommit_1&lt;br/&gt;&lt;i&gt;tMysqlCommit&lt;/i&gt;"]
+    tFixedFlowInput_1["tFixedFlowInput_1&lt;br/&gt;&lt;i&gt;tFixedFlowInput&lt;/i&gt;"]
+    file_monitor_1["file_monitor_1&lt;br/&gt;&lt;i&gt;ref_global:file_monitor&lt;/i&gt;"]
+    tJavaRow_1["tJavaRow_1&lt;br/&gt;&lt;i&gt;tJavaRow&lt;/i&gt;"]
+    tPrejob_1 ==&gt;|OnComponentOk| repertoires_traitement_2
+    repertoires_traitement_2 ==&gt;|OnComponentOk| tSetGlobalVar_1
+    tFTPConnection_1 ==&gt;|OnSubjobOk| tFTPClose_1
+    tFTPConnection_1 ==&gt;|OnComponentOk| tFTPPut_1
+    tJava_3 ==&gt;|OnSubjobOk| tJava_4
+    tJava_3 ==&gt;|tFileOutputDelimited_1_NB_LINE_gt_0_depose_sftp| tFTPConnection_1
+    tFTPPut_1 ==&gt;|OnComponentOk| tDBConnection_1
+    tJava_4 ==&gt;|tFileOutputDelimited_1_NB_LINE_gt_0| tFileList_2
+    tFileList_2 -.-&gt;|Iterate| tRunJob_1
+    tFileList_1 -.-&gt;|Iterate| tFileInputJSON_2
+    tFileList_1 ==&gt;|OnSubjobOk| tJava_3
+    tFileInputJSON_2 --&gt;|row1| tLogRow_1
+    tFileInputJSON_2 ==&gt;|originator_reference| tRunJob_5
+    tFileInputJSON_2 ==&gt;|no_originator_reference| tFileDelete_2
+    tFileInputJSON_2 ==&gt;|If| tRunJob_4
+    tRunJob_5 --&gt;|int5b_init| tFilterColumns_1
+    tRunJob_5 ==&gt;|OnSubjobOk| tJava_2
+    tFilterColumns_1 --&gt;|int5b| tMap_3
+    tMap_3 --&gt;|p04_out| tFileOutputDelimited_1
+    tJava_2 ==&gt;|tFileInputJSON_1_NB_LINE_gt_0| tRunJob_2
+    tDBConnection_1 ==&gt;|OnComponentOk| tFixedFlowInput_1
+    tDBConnection_1 ==&gt;|OnSubjobOk| tDBCommit_1
+    tFixedFlowInput_1 --&gt;|monitor_fichier| file_monitor_1
+    file_monitor_1 --&gt;|out| tJavaRow_1</pre>
+</details>
+<h2>Composants</h2>
+<table class="tbl"><thead><tr><th>Nom</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>tPrejob_1</td><td>tPrejob</td><td>Non renseigné</td></tr><tr><td>repertoires_traitement_2</td><td>ref_global:repertoires_traitement</td><td>Non renseigné</td></tr><tr><td>tSetGlobalVar_1</td><td>tSetGlobalVar</td><td>Non renseigné</td></tr><tr><td>tFTPConnection_1</td><td>tFTPConnection</td><td>Non renseigné</td></tr><tr><td>tJava_3</td><td>tJava</td><td>Non renseigné</td></tr><tr><td>tFTPClose_1</td><td>tFTPClose</td><td>Non renseigné</td></tr><tr><td>tFTPPut_1</td><td>tFTPPut</td><td>Non renseigné</td></tr><tr><td>tJava_4</td><td>tJava</td><td>Non renseigné</td></tr><tr><td>tFileList_2</td><td>tFileList</td><td>Non renseigné</td></tr><tr><td>tRunJob_1</td><td>tRunJob</td><td>Non renseigné</td></tr><tr><td>tRunJob_2</td><td>tRunJob</td><td>Non renseigné</td></tr><tr><td>tFileList_1</td><td>tFileList</td><td>Non renseigné</td></tr><tr><td>tFileInputJSON_2</td><td>tFileInputJSON</td><td>Non renseigné</td></tr><tr><td>tLogRow_1</td><td>tLogRow</td><td>Non renseigné</td></tr><tr><td>tFileDelete_2</td><td>tFileDelete</td><td>Non renseigné</td></tr><tr><td>tRunJob_4</td><td>tRunJob</td><td>Non renseigné</td></tr><tr><td>tRunJob_5</td><td>tRunJob</td><td>Non renseigné</td></tr><tr><td>tFilterColumns_1</td><td>tFilterColumns</td><td>Non renseigné</td></tr><tr><td>tMap_3</td><td>tMap</td><td>Non renseigné</td></tr><tr><td>tFileOutputDelimited_1</td><td>tFileOutputDelimited</td><td>Non renseigné</td></tr><tr><td>tJava_2</td><td>tJava</td><td>Non renseigné</td></tr><tr><td>tDBConnection_1</td><td>tMysqlConnection</td><td>Non renseigné</td></tr><tr><td>tDBCommit_1</td><td>tMysqlCommit</td><td>Non renseigné</td></tr><tr><td>tFixedFlowInput_1</td><td>tFixedFlowInput</td><td>Non renseigné</td></tr><tr><td>file_monitor_1</td><td>ref_global:file_monitor</td><td>Non renseigné</td></tr><tr><td>tJavaRow_1</td><td>tJavaRow</td><td>Non renseigné</td></tr></tbody></table>
+<h2>Connexions</h2>
+<table class="tbl"><thead><tr><th>De</th><th>Vers</th><th>Type</th><th>Nature</th></tr></thead><tbody><tr><td>tPrejob_1</td><td>repertoires_traitement_2</td><td>OnComponentOk</td><td>Déclencheur</td></tr><tr><td>repertoires_traitement_2</td><td>tSetGlobalVar_1</td><td>OnComponentOk</td><td>Déclencheur</td></tr><tr><td>tFTPConnection_1</td><td>tFTPClose_1</td><td>OnSubjobOk</td><td>Déclencheur</td></tr><tr><td>tFTPConnection_1</td><td>tFTPPut_1</td><td>OnComponentOk</td><td>Déclencheur</td></tr><tr><td>tJava_3</td><td>tJava_4</td><td>OnSubjobOk</td><td>Déclencheur</td></tr><tr><td>tJava_3</td><td>tFTPConnection_1</td><td>tFileOutputDelimited_1_NB_LINE_gt_0_depose_sftp</td><td>Déclencheur</td></tr><tr><td>tFTPPut_1</td><td>tDBConnection_1</td><td>OnComponentOk</td><td>Déclencheur</td></tr><tr><td>tJava_4</td><td>tFileList_2</td><td>tFileOutputDelimited_1_NB_LINE_gt_0</td><td>Déclencheur</td></tr><tr><td>tFileList_2</td><td>tRunJob_1</td><td>Iterate</td><td>Itération</td></tr><tr><td>tFileList_1</td><td>tFileInputJSON_2</td><td>Iterate</td><td>Itération</td></tr><tr><td>tFileList_1</td><td>tJava_3</td><td>OnSubjobOk</td><td>Déclencheur</td></tr><tr><td>tFileInputJSON_2</td><td>tLogRow_1</td><td>row1</td><td>Flux principal</td></tr><tr><td>tFileInputJSON_2</td><td>tRunJob_5</td><td>originator_reference</td><td>Déclencheur</td></tr><tr><td>tFileInputJSON_2</td><td>tFileDelete_2</td><td>no_originator_reference</td><td>Déclencheur</td></tr><tr><td>tFileInputJSON_2</td><td>tRunJob_4</td><td>If</td><td>Déclencheur</td></tr><tr><td>tRunJob_5</td><td>tFilterColumns_1</td><td>int5b_init</td><td>Flux principal</td></tr><tr><td>tRunJob_5</td><td>tJava_2</td><td>OnSubjobOk</td><td>Déclencheur</td></tr><tr><td>tFilterColumns_1</td><td>tMap_3</td><td>int5b</td><td>Flux principal</td></tr><tr><td>tMap_3</td><td>tFileOutputDelimited_1</td><td>p04_out</td><td>Flux principal</td></tr><tr><td>tJava_2</td><td>tRunJob_2</td><td>tFileInputJSON_1_NB_LINE_gt_0</td><td>Déclencheur</td></tr><tr><td>tDBConnection_1</td><td>tFixedFlowInput_1</td><td>OnComponentOk</td><td>Déclencheur</td></tr><tr><td>tDBConnection_1</td><td>tDBCommit_1</td><td>OnSubjobOk</td><td>Déclencheur</td></tr><tr><td>tFixedFlowInput_1</td><td>file_monitor_1</td><td>monitor_fichier</td><td>Flux principal</td></tr><tr><td>file_monitor_1</td><td>tJavaRow_1</td><td>out</td><td>Flux principal</td></tr></tbody></table>
+<h2>Paramètres de contexte</h2>
+<p class="muted">Les valeurs (hôtes, identifiants, chemins...) sont masquées par défaut car potentiellement sensibles ; seuls les noms de paramètres sont listés.</p>
+<table class="tbl"><thead><tr><th>Nom</th><th>Valeur</th></tr></thead><tbody><tr><td>repertoire_depose_sftp</td><td>•••• (masqué)</td></tr><tr><td>uncreflex_folderpath_out</td><td>•••• (masqué)</td></tr><tr><td>resource_flow_temp_folder</td><td>•••• (masqué)</td></tr><tr><td>connection_uncreflex_host</td><td>•••• (masqué)</td></tr><tr><td>connection_uncreflex_share_directory</td><td>•••• (masqué)</td></tr><tr><td>depose_sftp</td><td>•••• (masqué)</td></tr><tr><td>flow_name</td><td>•••• (masqué)</td></tr><tr><td>flow_workspace</td><td>•••• (masqué)</td></tr><tr><td>flow_environment</td><td>•••• (masqué)</td></tr><tr><td>connection_sftp_auth_method</td><td>•••• (masqué)</td></tr><tr><td>connection_sftp_encoding</td><td>•••• (masqué)</td></tr><tr><td>connection_sftp_host</td><td>•••• (masqué)</td></tr><tr><td>connection_sftp_passphrase_key</td><td>•••• (masqué)</td></tr><tr><td>connection_sftp_password</td><td>•••• (masqué)</td></tr><tr><td>connection_sftp_port</td><td>•••• (masqué)</td></tr><tr><td>connection_sftp_private_key</td><td>•••• (masqué)</td></tr><tr><td>connection_sftp_username</td><td>•••• (masqué)</td></tr><tr><td>connection_uncetl_host</td><td>•••• (masqué)</td></tr><tr><td>connection_uncetl_share_directory</td><td>•••• (masqué)</td></tr><tr><td>uncetl_filename_in</td><td>•••• (masqué)</td></tr><tr><td>uncetl_folderpath_archives</td><td>•••• (masqué)</td></tr><tr><td>uncetl_folderpath_in</td><td>•••• (masqué)</td></tr><tr><td>uncetl_folderpath_out</td><td>•••• (masqué)</td></tr><tr><td>connection_mssqlreflex_AdditionalParams</td><td>•••• (masqué)</td></tr><tr><td>connection_mssqlreflex_Database</td><td>•••• (masqué)</td></tr><tr><td>connection_mssqlreflex_Login</td><td>•••• (masqué)</td></tr><tr><td>connection_mssqlreflex_Password</td><td>•••• (masqué)</td></tr><tr><td>connection_mssqlreflex_Port</td><td>•••• (masqué)</td></tr><tr><td>connection_mssqlreflex_Schema</td><td>•••• (masqué)</td></tr><tr><td>connection_mssqlreflex_Server</td><td>•••• (masqué)</td></tr><tr><td>connection_mssqlreflex_SharedConnection</td><td>•••• (masqué)</td></tr><tr><td>connection_mysqlappglobal_Login</td><td>•••• (masqué)</td></tr><tr><td>connection_mysqlappglobal_Server</td><td>•••• (masqué)</td></tr><tr><td>connection_mysqlappglobal_Port</td><td>•••• (masqué)</td></tr><tr><td>connection_mysqlappglobal_AdditionalParams</td><td>•••• (masqué)</td></tr><tr><td>connection_mysqlappglobal_Password</td><td>•••• (masqué)</td></tr><tr><td>connection_mysqlappglobal_Database</td><td>•••• (masqué)</td></tr><tr><td>connection_mysqlappglobal_SharedConnection</td><td>•••• (masqué)</td></tr></tbody></table>
+</div>
+</body>
+</html>
