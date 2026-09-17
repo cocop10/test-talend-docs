@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>DWH_Load_Clients</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });</script>
+</head>
+<body>
+<div class="page">
+<p><a href="../index.html">&larr; Retour à l'index</a></p>
+<h1>DWH_Load_Clients</h1>
+<p>Synchronise quotidiennement les clients du CRM vers l'entrepôt de données (DWH).</p>
+<table class="tbl"><thead><tr><th>Champ</th><th>Valeur</th></tr></thead><tbody><tr><td>Propriétaire</td><td>corentin.poirier</td></tr><tr><td>Version</td><td>0.1</td></tr><tr><td>Planification</td><td>Non renseigné</td></tr><tr><td>Source du parsing</td><td>item</td></tr></tbody></table>
+<h2>Objectif métier</h2>
+<p>Alimenter le référentiel clients pour le reporting BI.</p>
+<h2>Systèmes source</h2>
+<p class="muted">Non renseigné</p>
+<h2>Systèmes cible</h2>
+<p class="muted">Non renseigné</p>
+<h2>Schéma du flux</h2>
+<p class="muted">Aucune capture d'écran associée (dépose une image nommée <code>DWH_Load_Clients.png</code> dans <code>screenshots/</code>).</p>
+<pre class="mermaid">flowchart LR
+    tFileInputDelimited_1["tFileInputDelimited_1&lt;br/&gt;&lt;i&gt;tFileInputDelimited&lt;/i&gt;"]
+    tMap_1["tMap_1&lt;br/&gt;&lt;i&gt;tMap&lt;/i&gt;"]
+    tDBOutput_1["tDBOutput_1&lt;br/&gt;&lt;i&gt;tDBOutput&lt;/i&gt;"]
+    tLogRow_1["tLogRow_1&lt;br/&gt;&lt;i&gt;tLogRow&lt;/i&gt;"]
+    tFileInputDelimited_1 --&gt;|row1| tMap_1
+    tMap_1 --&gt;|row2| tDBOutput_1
+    tMap_1 -.-&gt;|rejet| tLogRow_1</pre>
+<h2>Composants</h2>
+<table class="tbl"><thead><tr><th>Nom</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>tFileInputDelimited_1</td><td>tFileInputDelimited</td><td>Lit le fichier CSV des clients exporté par le CRM</td></tr><tr><td>tMap_1</td><td>tMap</td><td>Nettoyage et mapping des colonnes clients</td></tr><tr><td>tDBOutput_1</td><td>tDBOutput</td><td>Insertion dans la table clients de l'entrepôt de données</td></tr><tr><td>tLogRow_1</td><td>tLogRow</td><td>Non renseigné</td></tr></tbody></table>
+<h2>Connexions</h2>
+<table class="tbl"><thead><tr><th>De</th><th>Vers</th><th>Type</th><th>Nature</th></tr></thead><tbody><tr><td>tFileInputDelimited_1</td><td>tMap_1</td><td>row1</td><td>Flux principal</td></tr><tr><td>tMap_1</td><td>tDBOutput_1</td><td>row2</td><td>Flux principal</td></tr><tr><td>tMap_1</td><td>tLogRow_1</td><td>rejet</td><td>Rejet</td></tr></tbody></table>
+</div>
+</body>
+</html>

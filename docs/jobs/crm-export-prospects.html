@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>CRM_Export_Prospects</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });</script>
+</head>
+<body>
+<div class="page">
+<p><a href="../index.html">&larr; Retour à l'index</a></p>
+<h1>CRM_Export_Prospects</h1>
+<p>Exporte chaque semaine les prospects qualifiés du CRM vers un fichier utilisé par l'outil d'emailing pour la campagne marketing.
+</p>
+<table class="tbl"><thead><tr><th>Champ</th><th>Valeur</th></tr></thead><tbody><tr><td>Propriétaire</td><td>Equipe Marketing Ops</td></tr><tr><td>Version</td><td>Non renseigné</td></tr><tr><td>Planification</td><td>Hebdomadaire - lundi 06:00</td></tr><tr><td>Source du parsing</td><td>manual</td></tr></tbody></table>
+<h2>Systèmes source</h2>
+<ul><li>CRM Salesforce</li></ul>
+<h2>Systèmes cible</h2>
+<ul><li>Outil Emailing (Mailjet)</li></ul>
+<h2>Schéma du flux</h2>
+<img class="screenshot" src="../assets/screenshots/crm-export-prospects.png" alt="Capture d'écran du flux CRM_Export_Prospects">
+<details><summary>Diagramme généré automatiquement</summary>
+<pre class="mermaid">flowchart LR
+    tSalesforceInput_1["tSalesforceInput_1&lt;br/&gt;&lt;i&gt;tSalesforceInput&lt;/i&gt;"]
+    tMap_1["tMap_1&lt;br/&gt;&lt;i&gt;tMap&lt;/i&gt;"]
+    tFileOutputDelimited_1["tFileOutputDelimited_1&lt;br/&gt;&lt;i&gt;tFileOutputDelimited&lt;/i&gt;"]
+    tSalesforceInput_1 --&gt;|Main| tMap_1
+    tMap_1 --&gt;|Main| tFileOutputDelimited_1</pre>
+</details>
+<h2>Composants</h2>
+<table class="tbl"><thead><tr><th>Nom</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>tSalesforceInput_1</td><td>tSalesforceInput</td><td>Extraction des comptes prospects qualifiés (statut = "Qualifié")</td></tr><tr><td>tMap_1</td><td>tMap</td><td>Normalisation des colonnes (email, prénom, nom, segment)</td></tr><tr><td>tFileOutputDelimited_1</td><td>tFileOutputDelimited</td><td>Génération du fichier CSV de campagne</td></tr></tbody></table>
+<h2>Connexions</h2>
+<table class="tbl"><thead><tr><th>De</th><th>Vers</th><th>Type</th><th>Nature</th></tr></thead><tbody><tr><td>tSalesforceInput_1</td><td>tMap_1</td><td>Main</td><td>Flux principal</td></tr><tr><td>tMap_1</td><td>tFileOutputDelimited_1</td><td>Main</td><td>Flux principal</td></tr></tbody></table>
+<h2>Notes</h2>
+<p>Vérifier le filtre de qualification avant chaque campagne pour éviter
+d'exporter des doublons ou des contacts désabonnés.
+</p>
+</div>
+</body>
+</html>

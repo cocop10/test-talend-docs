@@ -1,0 +1,37 @@
+# Exemple de flux documenté SANS export Talend (.item) disponible :
+# seule une capture d'écran + ces métadonnées suffisent à générer sa page.
+#
+# Dépose la capture correspondante dans screenshots/CRM_Export_Prospects.png
+# (le nom du fichier doit correspondre au nom du job, insensible à la casse).
+
+name: CRM_Export_Prospects
+description: >
+  Exporte chaque semaine les prospects qualifiés du CRM vers un fichier
+  utilisé par l'outil d'emailing pour la campagne marketing.
+owner: Equipe Marketing Ops
+schedule: "Hebdomadaire - lundi 06:00"
+source_systems:
+  - CRM Salesforce
+target_systems:
+  - Outil Emailing (Mailjet)
+screenshot: CRM_Export_Prospects.png
+components:
+  - name: tSalesforceInput_1
+    type: tSalesforceInput
+    description: Extraction des comptes prospects qualifiés (statut = "Qualifié")
+  - name: tMap_1
+    type: tMap
+    description: Normalisation des colonnes (email, prénom, nom, segment)
+  - name: tFileOutputDelimited_1
+    type: tFileOutputDelimited
+    description: Génération du fichier CSV de campagne
+connections:
+  - from: tSalesforceInput_1
+    to: tMap_1
+    label: Main
+  - from: tMap_1
+    to: tFileOutputDelimited_1
+    label: Main
+notes: |
+  Vérifier le filtre de qualification avant chaque campagne pour éviter
+  d'exporter des doublons ou des contacts désabonnés.

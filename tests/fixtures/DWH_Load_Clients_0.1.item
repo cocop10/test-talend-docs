@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<talendfile:ProcessType xmlns:talendfile="platform:/resource/org.talend.model/model/TalendFile.xsd" author="corentin.poirier" jobType="STANDARD">
+  <node componentName="tFileInputDelimited" componentVersion="0.101" posX="128" posY="112">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFileInputDelimited_1"/>
+    <elementParameter field="TEXT" name="LABEL" value="Lecture_Clients_CSV"/>
+    <elementParameter field="MEMO_JAVA" name="COMPONENT_DESCRIPTION" value="Lit le fichier CSV des clients exporté par le CRM"/>
+  </node>
+  <node componentName="tMap" componentVersion="0.101" posX="304" posY="112">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tMap_1"/>
+    <elementParameter field="MEMO_JAVA" name="COMPONENT_DESCRIPTION" value="Nettoyage et mapping des colonnes clients"/>
+  </node>
+  <node componentName="tDBOutput" componentVersion="0.101" posX="480" posY="80">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tDBOutput_1"/>
+    <elementParameter field="MEMO_JAVA" name="COMPONENT_DESCRIPTION" value="Insertion dans la table clients de l'entrepôt de données"/>
+  </node>
+  <node componentName="tLogRow" componentVersion="0.101" posX="480" posY="240">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tLogRow_1"/>
+  </node>
+  <connection connectorName="FLOW" label="row1" lineStyle="1" metaname="tFileInputDelimited_1" source="tFileInputDelimited_1" target="tMap_1"/>
+  <connection connectorName="FLOW" label="row2" lineStyle="1" metaname="tMap_1" source="tMap_1" target="tDBOutput_1"/>
+  <connection connectorName="REJECT" label="rejet" lineStyle="3" metaname="tMap_1" source="tMap_1" target="tLogRow_1"/>
+</talendfile:ProcessType>

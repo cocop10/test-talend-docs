@@ -1,0 +1,24 @@
+
+:root {
+  color-scheme: light dark;
+  --fg: #1b1f24;
+  --bg: #ffffff;
+  --muted: #6b7280;
+  --border: #e2e8f0;
+  --accent: #2563eb;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --fg: #e5e7eb; --bg: #0f172a; --muted: #94a3b8; --border: #1f2937; }
+}
+body { background: var(--bg); color: var(--fg); font-family: -apple-system, Segoe UI, Roboto, sans-serif; }
+.page { max-width: 900px; margin: 0 auto; padding: 32px 16px 80px; line-height: 1.5; }
+h1, h2 { line-height: 1.25; }
+h2 { margin-top: 2em; border-bottom: 1px solid var(--border); padding-bottom: .3em; }
+a { color: var(--accent); }
+.muted { color: var(--muted); }
+.tbl { width: 100%; border-collapse: collapse; margin: 1em 0; }
+.tbl th, .tbl td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+.screenshot { max-width: 100%; border: 1px solid var(--border); border-radius: 6px; }
+code { background: rgba(127,127,127,.15); padding: 1px 5px; border-radius: 4px; }
+details { margin: 1em 0; }
+pre.mermaid { background: transparent; }

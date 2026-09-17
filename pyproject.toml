@@ -1,0 +1,21 @@
+[project]
+name = "talend-doc-gen"
+version = "0.1.0"
+description = "Génération automatique de documentation pour les flux Talend (schémas + captures d'écran)."
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.scripts]
+talend-doc-gen = "talend_doc_gen.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["talend_doc_gen"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
